@@ -12,7 +12,15 @@
 //   })
 //   .render("p", {})
 //   .loopRender("div", {});
-
+let freeNode = window.$vf().render(
+  "div",
+  {
+    attrs: {
+      style: "color:yellow;"
+    }
+  },
+  ["this is sub"]
+);
 console.log(
   window
     .$vf("#app")
@@ -20,8 +28,7 @@ console.log(
       "a",
       {
         attrs: {
-          innerHTML: "asdfdsafsadfsadf",
-          href: "www.baidu.com",
+          href: "http://www.baidu.com",
           style: "width:100px;background:red;"
         }
       },
@@ -33,6 +40,7 @@ console.log(
           console.log(vNode.$el); //此时未被渲染所以为null
         },
         "adsfdsaf",
+        freeNode,
         "<div></div>"
       ]
     )

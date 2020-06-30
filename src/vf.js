@@ -9,14 +9,17 @@
   root.$vf = factory();
 })(window, function() {
   //模板引擎
-  var tDriver = function(template) {};
-  tDriver();
+  var templateDriver = function(template) {};
+  templateDriver();
   //逻辑运算
-
+  var logicCompute = function() {};
+  logicCompute();
   //事件绑定
-
+  var eventDriver = function() {};
+  eventDriver();
   //双向绑定
-
+  var mvvmDriver = function() {};
+  mvvmDriver();
   //虚拟dom
   var vNode = function(parentNode) {
     return {
@@ -61,8 +64,8 @@
               // console.log(currDom);
               currDom.appendChild(document.createTextNode(childContent));
             } else if (
-              typeof childContent === "object" &&
-              childContent.type === "vfDomNode"
+              typeof childContent === "object"
+              // && childContent.type === "vfDomNode"
             ) {
               //子节点为vfDomNode对象时，渲染子组件内容
               currDom.appendChild(childContent.$el);
@@ -88,7 +91,11 @@
   };
   //根节点选择器
   return function(selector) {
-    this.rootDom = document.querySelector(selector);
-    return new vNode(this.rootDom);
+    this.rootDom = selector
+      ? document.querySelector(selector)
+      : document.createElement("div");
+    let _vNode = new vNode(this.rootDom);
+    // _vNode.type = "vfDomNode";
+    return _vNode;
   };
 });

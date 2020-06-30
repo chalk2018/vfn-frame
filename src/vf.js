@@ -8,15 +8,28 @@
   // }
   root.$vf = factory();
 })(window, function() {
+  //模板引擎
+  var tDriver = function(template) {};
+  tDriver();
+  //逻辑运算
+
+  //事件绑定
+
+  //双向绑定
+
+  //虚拟dom
   var vNode = function(parentNode) {
     return {
-      render: (el, vfnode, childRender) => {
+      $pel: parentNode, //父节点dom元素
+      $el: null, //当前节点dom元素，默认null，render选然后才可获取
+      render: (el, vfAttrObj, childrenRender) => {
         // 创建节点
-        var currDom = document.createElement(el);
+        let currDom = document.createElement(el);
+        this.$el = currDom;
         // 获取属性key
-        var vfattrs = Object.keys(vfnode);
+        var vfattrs = Object.keys(vfAttrObj);
         vfattrs.forEach((attrName, index) => {
-          var vfattr = vfnode[attrName]; //属性值
+          var vfattr = vfAttrObj[attrName]; //属性值
           //html原生属性赋值
           if (attrName === "attrs") {
             for (let n in vfattr) {
@@ -36,18 +49,44 @@
         });
         //渲染当前节点，链式渲染均为并列节点元素
         parentNode.appendChild(currDom);
-        console.log(parentNode);
+        // console.log(parentNode);
         //子节点渲染调用
-        if (!!childRender) {
-          childRender(new vNode(currDom));
+        if (!!childrenRender) {
+          childrenRender.forEach((childContent, index) => {
+            if (typeof childContent === "function") {
+              //子节点为回调函数时，回调执行渲染
+              childContent(new vNode(currDom));
+            } else if (typeof childContent === "string") {
+              //子节点为字符串时，直接渲染
+              // console.log(currDom);
+              currDom.appendChild(document.createTextNode(childContent));
+            } else if (
+              typeof childContent === "object" &&
+              childContent.type === "vfDomNode"
+            ) {
+              //子节点为vfDomNode对象时，渲染子组件内容
+              currDom.appendChild(childContent.$el);
+            } else {
+              //子节点为其他类型时，转换字符串渲染
+              currDom.appendChild(
+                document.createTextNode(String(childContent))
+              );
+            }
+          });
         }
         //返回当前节点虚拟dom
+        let _vNode = null;
         return (
-          (parentNode.appendChild(currDom) && false) || new vNode(parentNode)
+          (parentNode.appendChild(currDom) &&
+          (_vNode = new vNode(parentNode)) &&
+          (_vNode.$el = currDom) && //设置当前节点dom
+            false) ||
+          _vNode
         );
       }
     };
   };
+  //根节点选择器
   return function(selector) {
     this.rootDom = document.querySelector(selector);
     return new vNode(this.rootDom);

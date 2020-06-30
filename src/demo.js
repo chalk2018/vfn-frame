@@ -21,13 +21,20 @@ console.log(
       {
         attrs: {
           innerHTML: "asdfdsafsadfsadf",
-          href: "www.baidu.com"
+          href: "www.baidu.com",
+          style: "width:100px;background:red;"
         }
       },
-      vNode => {
-        console.log(vNode);
-        vNode.render("p", {});
-      }
+      [
+        "asdfsadf",
+        vNode => {
+          // console.log(vNode);
+          console.log(vNode.render("p", {}, ["vvvvv"]).$el);
+          console.log(vNode.$el); //此时未被渲染所以为null
+        },
+        "adsfdsaf",
+        "<div></div>"
+      ]
     )
     .render("div", {})
 );

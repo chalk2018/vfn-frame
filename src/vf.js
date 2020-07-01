@@ -8,8 +8,40 @@
   // }
   root.$vf = factory();
 })(window, function() {
+  // 生命周期钩子调用
   //模板引擎
-  var templateDriver = function(template) {};
+  var templateDriver = function(template) {
+    function templateStr(data, str) {
+      // 匹配字符串中{{}}的内容，whole是整个匹配，sub是括号内子表达式
+      return str.replace(/\{\{(.+?)\}\}/g, (whole, sub) => {
+        console.log("whole", whole);
+        console.log("sub", sub);
+        let subResult = eval("data." + sub);
+        // if(sub.includes(".")){
+
+        // }
+        return subResult;
+        // //sub是data而且data为基础类型，直接用值替代data
+        // if (sub === "data" && !(data instanceof Object)) return data;
+        // //subKey保存字符串分割以后的key
+        // let subKey = sub.split(".");
+        // //subKey是空或者data不是对象，返回匹配的whole，不替换
+        // if (!subKey || !(data instanceof Object)) return whole;
+        // //s1Key不空而且data是对象
+        // let i = 1; //i指向当前key的索引
+        // let value = data; //value指向当前的obj.key
+        // while (value[subKey[i]]) {
+        //   //obj.key存在时，
+        //   value = value[subKey[i]]; //替换value
+        //   i++; //指针后移
+        // }
+        // return value; //obj.key不存在，查询完毕，用value替换匹配的m
+      });
+    }
+    console.log(
+      templateStr({ a: 1, vva: 4 }, "asdf{{vva}}ads{{a==2?vva:'yy'}}")
+    );
+  };
   templateDriver();
   //逻辑运算
   var logicCompute = function() {};
